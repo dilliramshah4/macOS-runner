@@ -1,0 +1,73 @@
+name: macOS Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: macos-latest  # Uses the latest macOS runner (currently macOS 14)
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up environment
+      run: |
+        echo "Running on macOS"
+        sw_vers  # Display macOS version
+        uname -m  # Display architecture (arm64 or x86_64)
+        
+    - name: Install dependencies with Homebrew
+      run: |
+        brew update
+        # Example: Install common tools if needed
+        # brew install git python3 node
+        
+    - name: Make example program executable
+      run: |
+        chmod +x example-program.sh
+        
+    - name: Run example program
+      run: |
+        echo "Running example macOS program..."
+        ./example-program.sh
+        
+    - name: Run additional example commands
+      run: |
+        echo ""
+        echo "=== Additional Examples ==="
+        echo ""
+        
+        # Example 1: Create and process a file
+        echo "Example 1: File operations"
+        echo "Hello from GitHub Actions!" > output.txt
+        cat output.txt
+        echo ""
+        
+        # Example 2: Use macOS-specific commands
+        echo "Example 2: macOS system info"
+        system_profiler SPSoftwareDataType | grep "System Version"
+        echo ""
+        
+        # Example 3: Simple script execution
+        echo "Example 3: Inline script"
+        for i in {1..5}; do
+          echo "  Iteration $i"
+        done
+        echo ""
+        
+        # Example 4: Check available tools
+        echo "Example 4: Available tools"
+        which python3 || echo "  Python3 not found"
+        which node || echo "  Node not found"
+        which swift || echo "  Swift not found"
+        echo ""
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        echo "Workflow completed"
